@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Imja Glacial Lake Monitoring</title>
+    <!-- Use the same external stylesheets as the home page -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Link to the main style file in the parent directory -->
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+    <!-- This div will now load the new shared header from header.html -->
+    <div data-include-html="../includes/header.html"></div>
+
+    <!-- This is the header content specific to the Imja page, placed below the shared header. -->
+    <div class="container mt-4">
+        <!-- The main page title, which is now left-aligned -->
+        <h1 class="my-0">Imja Glacial Lake Monitoring</h1>
+    </div>
+
+    <!-- Main Content for the Imja Glacial Lake Page -->
+    <div class="container mt-2 mb-4">
+        <h2>About the Imja Glacial Lake</h2>
+        <p>
+            The Imja Glacial Lake is located in the Khumbu region of Nepal, near Mount Everest.
+            It's a significant focus of climate change studies due to the rapid expansion
+            of Imja Tsho, a glacial lake formed by its melting.
+        </p>
+    </div>
+    
+    <!-- The Interactive Image Slider -->
+    <h2 class="mt-5 text-center">Juxtapose of satellite images</h2>
+    <div id="image-slider-container" class="slider-container mb-5">
+        <!-- The "after" image (full view, bottom layer) -->
+        <img class="slider-image" src="../assets/images/ImjaLake/ImjaLake_2024.png" alt="Glacier 2024" />
+        <!-- Info label for the "after" image -->
+        <div class="image-info after">
+            <p class="m-0">2024</p>
+            <p class="m-0">Area: 1.5 km²</p>
+        </div>
+        
+        <!-- The "before" image, with clip-path controlling the visible part -->
+        <div id="slider-before-image" class="slider-before-image">
+            <img class="slider-image" src="../assets/images/ImjaLake/ImjaLake_1992.png" alt="Glacier 1992" />
+            <!-- Info label for the "before" image -->
+            <div class="image-info">
+                <p class="m-0">1992</p>
+                <p class="m-0">Area: 1 km²</p>
+            </div>
+        </div>
+
+        <!-- The draggable handle -->
+        <div id="slider-handle" class="slider-handle"></div>
+    </div>
+    
+    <!-- Navigation buttons for other glacier pages -->
+    <div class="container text-center mt-3">
+        <!-- Navigation Buttons for different monitoring pages -->
+        <nav id="lake-nav" class="my-4">
+            <a href="../pages/barun.html" class="btn btn-outline-primary mx-1">Explore Barun Glacial Lake</a>
+            <a href="../pages/thso_rolpa.html" class="btn btn-outline-primary mx-1">Explore Tsho Rolpa Glacial Lake</a>
+            <a href="../pages/dona.html" class="btn btn-outline-primary mx-1">Explore Dona Glacial Lake</a>
+            <a href="../pages/lower_barun.html" class="btn btn-outline-primary mx-1">Explore Lower Barun Glacial Lake</a>
+            <a href="../pages/bajura_ytd.html" class="btn btn-outline-primary mx-1">Explore Glacial Lake of Bajura</a>
+        </nav>
+    </div>
+
+
+    <!-- The Footer Section, which is now included from the master chunk -->
+    <div data-include-html="../includes/footer.html"></div>
+    
+    <!-- This script loads the content from the footer.html and header.html files -->
+    <script src="../js/include.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('image-slider-container');
+            const beforeImage = document.getElementById('slider-before-image');
+            const handle = document.getElementById('slider-handle');
+            
+            let isDragging = false;
+            
+            // Function to update the slider position and clip-path
+            function slide(clientX) {
+                const containerRect = container.getBoundingClientRect();
+                const containerLeft = containerRect.left;
+                const containerWidth = containerRect.width;
+
+                let positionX = clientX - containerLeft;
+
+                // Clamp the position to stay within the container boundaries
+                positionX = Math.max(0, Math.min(positionX, containerWidth));
+                
+                // Calculate position as a percentage
+                const positionPercentage = (positionX / containerWidth) * 100;
+                
+                // Update the clip-path of the "before" image
+                beforeImage.style.clipPath = `inset(0 ${100 - positionPercentage}% 0 0)`;
+                
+                // Update the position of the handle
+                handle.style.left = `${positionPercentage}%`;
+            }
+
+            // Mouse events for desktop
+            handle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                e.preventDefault(); // Prevent text selection
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    slide(e.clientX);
+                }
+            });
+
+            // Touch events for mobile
+            handle.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length > 0) {
+                    slide(e.touches[0].clientX);
+                }
+            });
+            
+            // Set initial position of slider in the center
+            const initialWidth = container.offsetWidth / 2;
+            const initialPercentage = (initialWidth / container.offsetWidth) * 100;
+            beforeImage.style.clipPath = `inset(0 ${100 - initialPercentage}% 0 0)`;
+            handle.style.left = `${initialPercentage}%`;
+        });
+    </script>
+</body>
+</html>

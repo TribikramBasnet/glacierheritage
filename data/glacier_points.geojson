@@ -1,0 +1,76 @@
+{
+"type": "FeatureCollection",
+"name": "glacier_points_",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ 
+    "type": "Feature", 
+    "properties": { 
+        "id": null, 
+        "name": "Imja Glacial Lake", 
+        "description": null, 
+        "timestamp": null, 
+        "begin": null, 
+        "end": null, 
+        "altitudeMode": null, 
+        "tessellate": -1, 
+        "extrude": 0, 
+        "visibility": -1, 
+        "drawOrder": null, 
+        "icon": null,  
+        "page": "imja" 
+    }, 
+        "geometry": { 
+            "type": "Point", 
+            "coordinates": [ 86.924633947850907, 27.898282051410789, 0.0 ] 
+        } 
+    },
+{ 
+    "type": "Feature", 
+    "properties": { 
+        "id": null, 
+        "name": "Tsho Rolpa Glacial Lake", 
+        "description": null, 
+        "timestamp": null, 
+        "begin": null, 
+        "end": null, 
+        "altitudeMode": null, 
+        "tessellate": -1, 
+        "extrude": 0, 
+        "visibility": -1, 
+        "drawOrder": null, 
+        "icon": null ,
+        "page": "thso_rolpa"
+    }, 
+        "geometry": { 
+            "type": "Point", 
+            "coordinates": [ 86.473442366312838, 27.86273150620233, 0.0 ] 
+            } 
+        },
+{ "type": "Feature", "properties": { 
+    "id": null, "name": "Barun Glacial Lake", "description": null, 
+    "timestamp": null, "begin": null, "end": null, "altitudeMode": null, 
+    "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, 
+    "icon": null, "page":"barun" }, "geometry": 
+    { "type": "Point", 
+    "coordinates": [ 87.081277642171742, 27.844053931864291, 0.0 ] 
+    } },
+{ "type": "Feature", "properties": {
+    "id": null, "name": "Lower Barun Glacial Lake", "description": null, 
+    "timestamp": null, "begin": null, "end": null, "altitudeMode": null, 
+    "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, 
+    "icon": null,"page":"lower_barun" }, "geometry": 
+    { "type": "Point", 
+    "coordinates": [ 87.091730788310286, 27.79860297306077, 0.0 ] 
+    } },
+{ "type": "Feature", "properties": { 
+    "id": null, "name": "Dona Glacial Lake", "description": null, 
+    "timestamp": null, "begin": null, "end": null, "altitudeMode": null, 
+    "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, 
+    "icon": null, "page":"dona" }, "geometry":
+     { "type": "Point", 
+     "coordinates": [ 84.485942793924849, 28.487397960663969, 0.0 ] 
+     } },
+{ "type": "Feature", "properties": { "id": null, "name": "Sudurpacschim (Name Yet to be Decided)", "page":"bajura_ytd", "description": null, "timestamp": null, "begin": null, "end": null, "altitudeMode": null, "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, "icon": null }, "geometry": { "type": "Point", "coordinates": [ 81.577284807485285, 29.89740006567396, 0.0 ] } }
+]
+}

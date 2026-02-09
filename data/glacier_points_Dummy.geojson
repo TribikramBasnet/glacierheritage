@@ -1,0 +1,32 @@
+{
+"type": "FeatureCollection",
+"name": "glacier_points",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{
+      "type": "Feature",
+      "properties": {
+        "S.N.": 1,
+        "Index No.": 101,
+        "Station Name": "Kakerpakha",
+        "District": "Baitadi",
+        "Province": 7,
+        "Type": "Precipitation",
+        "Automatic": null,
+        "Elev": "783",
+        "name": "Kakerpakha Glacier",
+        "page": "imja"
+      },
+      "geometry": { "type": "Point", "coordinates": [ 80.53816, 29.65826 ] }
+    },
+{ "type": "Feature", "properties": { "S.N.": 416, "Index No.": null, "Station Name": "Lukla  Airport", "District": "Solukhumbu", "Province": 1, "Type": "Aero-Synoptic", "Automatic": "AWS", "Elev": "2786" }, "geometry": { "type": "Point", "coordinates": [ 86.72817, 27.68639 ] } },
+{ "type": "Feature", "properties": { "S.N.": 417, "Index No.": null, "Station Name": "Tumlingtar Airport", "District": "Sankhuwasabha", "Province": 1, "Type": "Aero-Synoptic", "Automatic": "TPB", "Elev": "403" }, "geometry": { "type": "Point", "coordinates": [ 87.1858, 27.3158 ] } },
+{ "type": "Feature", "properties": { "S.N.": 418, "Index No.": 1304, "Station Name": "Pakhribas", "District": "Dhankuta", "Province": 1, "Type": "Agrometeorology", "Automatic": "AWS", "Elev": "1720" }, "geometry": { "type": "Point", "coordinates": [ 87.2925, 27.04634 ] } },
+{ "type": "Feature", "properties": { "S.N.": 419, "Index No.": 1320, "Station Name": "Tarahara", "District": "Sunsari", "Province": 1, "Type": "Agrometeorology", "Automatic": "AWS", "Elev": "120" }, "geometry": { "type": "Point", "coordinates": [ 87.27874, 26.69882 ] } },
+{ "type": "Feature", "properties": { "S.N.": 420, "Index No.": 1421, "Station Name": "Gaida (Kankai)", "District": "Jhapa", "Province": 1, "Type": "Agrometeorology", "Automatic": "AWS", "Elev": "107" }, "geometry": { "type": "Point", "coordinates": [ 87.86072, 26.65689 ] } },
+{ "type": "Feature", "properties": { "S.N.": 421, "Index No.": 1324, "Station Name": "Bhojpur", "District": "Bhojpur", "Province": 1, "Type": "AWS", "Automatic": "AWS", "Elev": "1595" }, "geometry": { "type": "Point", "coordinates": [ 87.05, 27.18333 ] } },
+{ "type": "Feature", "properties": { "S.N.": 422, "Index No.": 1423, "Station Name": "Mai Pokhari", "District": "Ilam", "Province": 1, "Type": "AWS", "Automatic": "AWS", "Elev": "2119" }, "geometry": { "type": "Point", "coordinates": [ 87.92863, 27.00523 ] } },
+{ "type": "Feature", "properties": { "S.N.": 423, "Index No.": null, "Station Name": "Udayapur Gadi Radar", "District": "Udayapur", "Province": 1, "Type": "AWS", "Automatic": "AWS", "Elev": "1175" }, "geometry": { "type": "Point", "coordinates": [ 86.52, 26.93 ] } },
+{ "type": "Feature", "properties": { "S.N.": 475, "Index No.": null, "Station Name": "Nala", "District": "Kavreplanchock", "Province": 3, "Type": "TPB", "Automatic": "TPB", "Elev": null }, "geometry": { "type": "Point", "coordinates": [ 0.0, 0.0 ] } }
+]
+}

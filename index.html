@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glacier Monitoring Nepal</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Link to Font Awesome for the recenter button icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLp/qC1D8z+E1uC9zG51q+yP7l6f9F2a6F7a+6p3+L6h4+B+B+J+T3nF8a/9Z+I+0N+A+L+F+F+Q+A+L+F+I+J+Sg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <!-- This div will now load the main website header from header.html -->
+    <div data-include-html="includes/header.html"></div>
+    
+    <!-- This is the home page's specific navigation, placed below the master header -->
+    <div class="container text-center mt-3">
+        <!-- Navigation Buttons for different monitoring pages -->
+        <nav id="lake-nav" class="my-4">
+            <a href="../pages/imja.html" class="btn btn-outline-primary mx-1">Explore Imja Glacial Lake</a>
+            <a href="../pages/barun.html" class="btn btn-outline-primary mx-1">Explore Barun Glacial Lake</a>
+            <a href="../pages/thso_rolpa.html" class="btn btn-outline-primary mx-1">Explore Tsho Rolpa Glacial Lake</a>
+            <a href="../pages/dona.html" class="btn btn-outline-primary mx-1">Explore Dona Glacial Lake</a>
+            <a href="../pages/lower_barun.html" class="btn btn-outline-primary mx-1">Explore Lower Barun Glacial Lake</a>
+            <a href="../pages/bajura_ytd.html" class="btn btn-outline-primary mx-1">Explore Glacial Lake of Bajura</a>
+        </nav>
+    </div>
+
+    <!-- Body -->
+    <div id="map-container" style="position: relative; height: 450px; margin: 20px;">
+        <div id="map" style="height: 100%; width: 100%;"></div>
+        <!-- Recenter button added here -->
+        <button id="recenter-btn" class="btn btn-primary btn-sm recenter-btn">
+            <i class="fas fa-crosshairs"></i>
+        </button>
+    </div>
+    
+    <!-- This div will contain the walkthrough modal -->
+    <div data-include-html="includes/walkthrough_modal.html"></div>
+
+    <!-- The Thank You Banner -->
+    <div id="thank-you-banner" class="alert alert-success text-center fixed-bottom m-3" role="alert" style="display: none;">
+        Thank you for visiting! We appreciate your interest in our project. Click the map marker to explore Glacial Lake Changes.
+    </div>
+
+    <!-- Footer -->
+    <div data-include-html="includes/footer.html"></div>
+
+    <!-- This script loads the content from the footer.html and header.html files -->
+    <script src="js/include.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/map.js"></script>
+    <!-- Our new walkthrough script -->
+    <script src="js/walkthrough.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
