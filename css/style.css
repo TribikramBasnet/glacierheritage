@@ -1,12 +1,9 @@
 #map {
     height: 600px;
-    width: 100%; /* Add a width to ensure it fills the container */
+    width: 100%;
 }
 
-
-/* Imja Page */
-/* Add these styles to your css/style.css file */
-
+/* Glacial Lake Page */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -29,7 +26,7 @@ body {
 }
 
 .container {
-    flex: 1; /* Ensures the main content section takes up available space */
+    flex: 1;
     padding: 20px;
 }
 
@@ -42,103 +39,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.footer {
-    background-color: #444;
-    color: #fff;
-    padding: 30px 20px;
-    text-align: center;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-}
-
-.footer-section {
-    max-width: 300px;
-}
-
-.footer-section h3 {
-    margin-top: 0;
-}
-
-.logo-container img {
-    height: 50px;
-    margin: 0 10px;
-    filter: grayscale(100%);
-    opacity: 0.8;
-}
-
-.footer-bottom {
-    margin-top: 20px;
-    border-top: 1px solid #555;
-    padding-top: 10px;
-}
-
-/* Footer */
-/* Styling for the master footer layout */
-.footer-master {
-    background-color: #333;
-    color: #fff;
-    padding: 2rem 1rem;
-    text-align: center;
-}
-
-.footer-grid {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #555;
-}
-
-.footer-section {
-    flex-basis: 150px; /* Adjust based on your needs */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.footer-section h5 {
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-bottom: 1rem;
-    white-space: nowrap; /* Prevents text from wrapping */
-}
-
-.logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo-container img {
-    height: 40px;
-    width: auto;
-    filter: grayscale(100%);
-    opacity: 0.8;
-}
-
-.footer-credits {
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    color: #999;
-}
-
-/* Ensure the layout is responsive on smaller screens */
-@media (max-width: 768px) {
-    .footer-grid {
-        justify-content: center;
-        gap: 2rem;
-    }
-}
-
 /* Slider */
-/* Container for the image slider */
 .slider-container {
     position: relative;
     width: 80vw;
@@ -147,17 +48,15 @@ body {
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    margin: auto; /* Center the slider */
+    margin: auto;
 }
 
-/* Base styling for the images */
 .slider-image {
     display: block;
     width: 100%;
     height: auto;
 }
 
-/* The top image container that will be clipped */
 .slider-before-image {
     position: absolute;
     top: 0;
@@ -167,7 +66,6 @@ body {
     clip-path: inset(0 50% 0 0);
 }
 
-/* The draggable handle - now a simple vertical line */
 .slider-handle {
     position: absolute;
     top: 0;
@@ -194,14 +92,13 @@ body {
     font-size: 0.8em;
     z-index: 5;
 }
+
 .image-info.after {
     left: auto;
     right: 10px;
 }
 
-
 /* About Us */
-/* Additional styling for the bio boxes */
 .bio-box {
     background-color: #f8f9fa;
     border-radius: 12px;
@@ -214,6 +111,7 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 .bio-box img {
     border-radius: 50%;
     width: 120px;
@@ -222,32 +120,46 @@ body {
     border: 3px solid #0d6efd;
     margin-bottom: 15px;
 }
-.bio-box h5, .bio-box p {
+
+.bio-box h5,
+.bio-box p {
     margin: 0;
     padding: 0;
 }
+
 .bio-box .card-text {
     font-size: 0.9rem;
     color: #555;
     margin-top: 10px;
 }
+
 .social-icons a {
     color: #0d6efd;
     font-size: 1.2rem;
     margin: 0 8px;
     transition: color 0.3s ease;
 }
+
 .social-icons a:hover {
     color: #0a58ca;
 }
 
-/* Map Btn */
-/* Add this CSS to your style.css file */
+.social-text-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Map Button */
 .recenter-btn {
     position: absolute;
     bottom: 20px;
     right: 20px;
-    z-index: 1000; /* Ensure it is on top of the map */
+    z-index: 1000;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -256,13 +168,98 @@ body {
     align-items: center;
     justify-content: center;
 }
+
 /* Navigation Button */
 #lake-nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem; /* This creates the space between the buttons */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
 }
+
 #lake-nav .btn {
-  margin: 0; /* This removes the default Bootstrap margin to prevent conflicts with the gap property */
+    margin: 0;
+}
+
+/* Styling for the master footer layout */
+.footer-master {
+    background-color: transparent;
+    color: #333;
+    padding: 2rem 1rem;
+    text-align: center;
+    border-top: 1px solid #222;
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.footer-section {
+    flex-basis: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-section h5 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+    white-space: nowrap;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-container img {
+    height: 60px;
+    width: auto;
+}
+
+.dark-line {
+    border-top: 2px solid #fff;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.footer-credits {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #999;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+}
+
+/* New responsive styles for small screens */
+@media (max-width: 767.98px) {
+    .social-icons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .social-text-link {
+        white-space: normal;
+        justify-content: flex-start;
+        width: 100%;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+    }
+    .social-icons a {
+        margin: 0;
+    }
+    .footer-grid {
+        justify-content: center;
+        gap: 2rem;
+    }
 }

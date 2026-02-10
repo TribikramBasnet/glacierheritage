@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <!-- Link to the main style file in the parent directory -->
     <link rel="stylesheet" href="../css/style.css" />
+    <!-- Load Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
     <style>
         /* Additional styling for the code blocks */
         .code-section {
@@ -34,6 +38,21 @@
             top: 10px;
             right: 10px;
         }
+        /* Style for the copy success message */
+        .copy-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -52,38 +71,98 @@
             Similarly, for the historical data (1992), we used Landsat 5 imagery and applied the same cloud filtering and median-of-available-images approach. The lake area was calculated by creating water masks and performing Normalized Difference Water Index (NDWI) calculations directly within the GEE platform. The following are the GEE scripts used for this process.
         </p>
 
+        <!-- Copy Success Message -->
+        <div id="copy-message" class="copy-message">Code copied to clipboard!</div>
+
         <!-- Code Block 1: Landsat 8 Imagery (2024) -->
         <div class="code-section">
-            <h5 class="mb-3">1. Landsat 8 Imagery (2024)</h5>
+            <h5 class="mb-3">1. Landsat 8 and 9 Imagery (2024)</h5>
             <div class="code-container">
-                <button class="btn btn-outline-primary btn-sm copy-btn" onclick="copyCode('code-block-1')">Copy Code</button>
-                <pre><code id="code-block-1">
-// Define the region of interest for your glacier.
-var roi = ee.Geometry.Polygon([[86.915, 27.89], [86.915, 27.90], [86.92, 27.90], [86.92, 27.89]]);
+                <button class="btn btn-primary btn-sm copy-btn" onclick="copyCode('code-block-1')">Copy Code</button>
+                <pre><code id="code-block-1" class="language-javascript">
+// A script for exporting Landsat 8 and 9 satellite images for visual analysis.
+// This code is designed for open science, allowing users to easily
+// customize the analysis period and region of interest.
 
-// Function to mask clouds in Landsat 8 imagery.
-function maskL8sr(image) {
-    var cloudShadowBitMask = (1 << 3);
-    var cirrusBitMask = (1 << 1);
-    var cloudsBitMask = (1 << 5);
-    var qa = image.select('QA_PIXEL');
-    var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)
-                 .and(qa.bitwiseAnd(cirrusBitMask).eq(0))
-                 .and(qa.bitwiseAnd(cloudsBitMask).eq(0));
-    return image.updateMask(mask);
-}
+// ====================================================================
+// SECTION 1: USER-CONFIGURABLE PARAMETERS
+// ====================================================================
 
-// Filter Landsat 8 collection for post-monsoon 2024 with low cloud cover.
-var l8 = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
-             .filterDate('2024-09-01', '2024-11-30')
-             .filterBounds(roi)
-             .map(maskL8sr)
-             .median(); // Use median to handle multiple images
+// Define your region of interest. This example uses a FeatureCollection asset.
+// Replace with your own geometry (e.g., ee.Geometry.Point, ee.Geometry.Polygon)
+// or a different asset ID.
+var region = ee.FeatureCollection('projects/ee-basnettribikram/assets/Glacier_Boundary');
 
-// Display the result on the map.
-var visParams = {bands: ['SR_B4', 'SR_B3', 'SR_B2'], min: 0, max: 0.3};
-Map.addLayer(l8, visParams, 'Landsat 8 - 2024');
-Map.centerObject(roi, 12);
+// Define the specific years for the image export (Landsat 8 data is available from 2013-present).
+// The script will automatically select the correct mission (L8 or L9) based on the year.
+var years = ee.List.sequence(2013, 2024);
+
+// Define the months for the post-monsoon season (e.g., October and November).
+var startMonth = 10;
+var endMonth = 11;
+
+// Define the maximum allowed cloud cover percentage (0-100).
+var maxCloudCover = 20;
+
+// ====================================================================
+// SECTION 2: IMAGE EXPORT WORKFLOW
+// ====================================================================
+
+// Set the map center to the region of interest.
+Map.centerObject(region, 12);
+
+// Use evaluate() to handle the client-side list of years, then iterate and export on the server.
+years.evaluate(function(yearList) {
+ yearList.forEach(function(year) {
+   // Define the date range for the current year.
+   var start = ee.Date.fromYMD(year, startMonth, 1);
+   var end = ee.Date.fromYMD(year, endMonth, 30);
+   
+   // Use a conditional to select the correct Landsat mission.
+   var collectionId = year <= 2021 ? "LANDSAT/LC08/C02/T1_TOA" : "LANDSAT/LC09/C02/T1_TOA";
+   var rgbBands = ['B4', 'B3', 'B2']; // RGB for both Landsat 8 and 9
+   
+   // Filter the selected Landsat collection by bounds, date, and cloud cover.
+   var filtered = ee.ImageCollection(collectionId)
+     .filterBounds(region)
+     .filterDate(start, end)
+     .filter(ee.Filter.lt('CLOUD_COVER', maxCloudCover))
+     .select(rgbBands);
+
+   // Get the number of images to provide feedback to the user.
+   var imageCount = filtered.size();
+   imageCount.getInfo(function(count) {
+     print('-----------------------------------------');
+     print('Year:', year);
+     print('Number of images:', count);
+     if (count === 0) {
+       print('No images found for this year. Skipping visualization and export.');
+     }
+   });
+
+   // Create a median composite to reduce cloud and shadow effects.
+   var median = filtered.median();
+   
+   // Multiply by 512 and convert to 8-bit unsigned integer for better visual export quality.
+   var visual = median.multiply(512).uint8();
+   
+   // Add the image to the map for visualization, clipped to the region.
+   Map.addLayer(visual.clip(region), {}, 'RGB Image ' + year);
+
+   // Export the final image to Google Drive.
+   Export.image.toDrive({
+     image: visual,
+     description: 'Glacier_LakeGlacier_Boundary' + year,
+     folder: 'GlacierLake_Frames',
+     fileNamePrefix: 'Glacier_LakeGlacier_Boundary_' + year,
+     region: region,
+     scale: 30,
+     maxPixels: 1e13
+   });
+
+   print(year);
+ });
+});
                 </code></pre>
             </div>
         </div>
@@ -92,29 +171,87 @@ Map.centerObject(roi, 12);
         <div class="code-section">
             <h5 class="mb-3">2. Landsat 5 Imagery (1992)</h5>
             <div class="code-container">
-                <button class="btn btn-outline-primary btn-sm copy-btn" onclick="copyCode('code-block-2')">Copy Code</button>
-                <pre><code id="code-block-2">
-// Define the region of interest for your glacier.
-var roi = ee.Geometry.Polygon([[86.915, 27.89], [86.915, 27.90], [86.92, 27.90], [86.92, 27.89]]);
+                <button class="btn btn-primary btn-sm copy-btn" onclick="copyCode('code-block-2')">Copy Code</button>
+                <pre><code id="code-block-2" class="language-javascript">
+// A script for exporting Landsat 5 satellite images for visual analysis.
+// This code is designed for open science, allowing users to easily
+// customize the analysis period and region of interest.
 
-// Function to mask clouds in Landsat 5 imagery.
-function maskL5sr(image) {
-    var qa = image.select('pixel_qa');
-    var mask = qa.bitwiseAnd(4).eq(0).and(qa.bitwiseAnd(8).eq(0));
-    return image.updateMask(mask);
-}
+// ====================================================================
+// SECTION 1: USER-CONFIGURABLE PARAMETERS
+// ====================================================================
 
-// Filter Landsat 5 collection for post-monsoon 1992 with low cloud cover.
-var l5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
-             .filterDate('1992-09-01', '1992-11-30')
-             .filterBounds(roi)
-             .map(maskL5sr)
-             .median(); // Use median to handle multiple images
+// Define your region of interest. This example uses a FeatureCollection asset.
+// Replace with your own geometry (e.g., ee.Geometry.Point, ee.Geometry.Polygon)
+// or a different asset ID.
+var region = ee.FeatureCollection('projects/ee-basnettribikram/assets/Glacier_Boundary');
 
-// Display the result on the map.
-var visParams = {bands: ['B3', 'B2', 'B1'], min: 0, max: 0.3};
-Map.addLayer(l5, visParams, 'Landsat 5 - 1992');
-Map.centerObject(roi, 12);
+// Define the specific years for the image export (Landsat 5 data is available from 1984-2012).
+// You can define a range using ee.List.sequence or a specific list of years.
+var years = ee.List.sequence(1984, 2012);
+
+// Define the months for the post-monsoon season (e.g., October and November).
+var startMonth = 10;
+var endMonth = 11;
+
+// Define the maximum allowed cloud cover percentage (0-100).
+var maxCloudCover = 20;
+
+// ====================================================================
+// SECTION 2: IMAGE EXPORT WORKFLOW
+// ====================================================================
+
+// Set the map center to the region of interest.
+Map.centerObject(region, 12);
+
+// Use evaluate() to handle the client-side list of years, then iterate and export on the server.
+years.evaluate(function(yearList) {
+ yearList.forEach(function(year) {
+   // Define the date range for the current year.
+   var start = ee.Date.fromYMD(year, startMonth, 1);
+   var end = ee.Date.fromYMD(year, endMonth, 30);
+   
+   // Filter the Landsat 5 collection by bounds, date, and cloud cover.
+   var filtered = ee.ImageCollection("LANDSAT/LT05/C02/T1_TOA")
+     .filterBounds(region)
+     .filterDate(start, end)
+     .filter(ee.Filter.lt('CLOUD_COVER', maxCloudCover))
+     .select(['B3', 'B2', 'B1']); // Select the RGB bands for Landsat 5
+
+   // Get the number of images to provide feedback to the user.
+   var imageCount = filtered.size();
+   imageCount.getInfo(function(count) {
+     print('-----------------------------------------');
+     print('Year:', year);
+     print('Number of images:', count);
+     if (count === 0) {
+       print('No images found for this year. Skipping visualization and export.');
+     }
+   });
+
+   // Create a median composite to reduce cloud and shadow effects.
+   var median = filtered.median();
+   
+   // Multiply by 512 and convert to 8-bit unsigned integer for better visual export quality.
+   var visual = median.multiply(512).uint8();
+   
+   // Add the image to the map for visualization, clipped to the region.
+   Map.addLayer(visual.clip(region), {}, 'RGB Image ' + year);
+
+   // Export the final image to Google Drive.
+   Export.image.toDrive({
+     image: visual,
+     description: 'Glacier_LakeGlacier_Boundary' + year,
+     folder: 'GlacierLake_Frames',
+     fileNamePrefix: 'Glacier_LakeGlacier_Boundary_' + year,
+     region: region,
+     scale: 30,
+     maxPixels: 1e13
+   });
+
+   print(year);
+ });
+});
                 </code></pre>
             </div>
         </div>
@@ -123,34 +260,195 @@ Map.centerObject(roi, 12);
         <div class="code-section">
             <h5 class="mb-3">3. Lake Area Calculation</h5>
             <div class="code-container">
-                <button class="btn btn-outline-primary btn-sm copy-btn" onclick="copyCode('code-block-3')">Copy Code</button>
-                <pre><code id="code-block-3">
-// This script assumes you have already defined a 'lake' geometry and a 'lake_image' (e.g., from the previous code blocks).
-// In GEE, you would typically draw a polygon around the lake to define the ROI.
+                <button class="btn btn-primary btn-sm copy-btn" onclick="copyCode('code-block-3')">Copy Code</button>
+                <pre><code id="code-block-3" class="language-javascript">
+// A script to analyze glacial lake area change using Landsat imagery.
+// This code is designed for open science, allowing users to easily
+// customize the analysis period and region of interest.
 
-// Define the lake geometry (example placeholder)
-var lake = ee.Geometry.Polygon([[86.915, 27.89], [86.915, 27.90], [86.92, 27.90], [86.92, 27.89]]);
+// ====================================================================
+// SECTION 1: USER-CONFIGURABLE PARAMETERS
+// ====================================================================
 
-// Function to calculate NDWI and create a water mask
-function calculateNDWI(image) {
-    var ndwi = image.normalizedDifference(['SR_B3', 'SR_B5']).rename('NDWI');
-    var water_mask = ndwi.gt(0.2); // A simple threshold to create a water mask
-    return water_mask.set('system:time_start', image.get('system:time_start'));
-}
+// Define your region of interest. This example uses a FeatureCollection asset.
+// Replace with your own geometry (e.g., ee.Geometry.Point, ee.Geometry.Polygon)
+// or a different asset ID.
+var region = ee.FeatureCollection('projects/ee-basnettribikram/assets/Glacier_Boundary');
 
-// Apply the function to the image (assuming 'l8' is your Landsat 8 image from the previous script)
-var water_mask = calculateNDWI(l8);
+// Define the specific years for the analysis.
+var years = [1992];
 
-// Calculate the area of the water mask in square kilometers.
-var area_sq_km = water_mask.multiply(ee.Image.pixelArea()).reduceRegion({
-    reducer: ee.Reducer.sum(),
-    geometry: lake,
-    scale: 30, // Landsat resolution
-    maxPixels: 1e9
-}).get('NDWI');
+// Define the months for the post-monsoon season (e.g., October and November).
+var startMonth = 10;
+var endMonth = 11;
 
-// Print the result to the GEE console.
-print('Lake Area in 2024 (sq km):', ee.Number(area_sq_km).divide(1e6));
+// Define the maximum allowed cloud cover percentage (0-100).
+var maxCloudCover = 20;
+
+// ====================================================================
+// SECTION 2: FUNCTIONS
+// ====================================================================
+
+/**
+ * Returns the correct Landsat 5, 8, or 9 collection based on the year.
+ * @param {number} year The year to get the collection for.
+ * @return {ee.ImageCollection} The filtered Landsat image collection.
+ */
+var getLandsatCollection = function(year) {
+ var collection;
+ // Landsat 5 (TM): 1984-2012
+ if (year >= 1984 && year <= 2012) {
+   collection = ee.ImageCollection("LANDSAT/LT05/C02/T1_TOA")
+     .filterBounds(region)
+     .filterDate(ee.Date.fromYMD(year, startMonth, 1), ee.Date.fromYMD(year, endMonth, 30))
+     .filter(ee.Filter.lt('CLOUD_COVER', maxCloudCover));
+ // Landsat 8 (OLI): 2013-2021
+ } else if (year >= 2013 && year <= 2021) {
+   collection = ee.ImageCollection("LANDSAT/LC08/C02/T1_TOA")
+     .filterBounds(region)
+     .filterDate(ee.Date.fromYMD(year, startMonth, 1), ee.Date.fromYMD(year, endMonth, 30))
+     .filter(ee.Filter.lt('CLOUD_COVER', maxCloudCover));
+ // Landsat 9 (OLI): 2022-present
+ } else if (year >= 2022) {
+   collection = ee.ImageCollection("LANDSAT/LC09/C02/T1_TOA")
+     .filterBounds(region)
+     .filterDate(ee.Date.fromYMD(year, startMonth, 1), ee.Date.fromYMD(year, endMonth, 30))
+     .filter(ee.Filter.lt('CLOUD_COVER', maxCloudCover));
+ } else {
+   // If no valid collection is found, return an empty collection
+   return ee.ImageCollection([]);
+ }
+ return collection;
+};
+
+// ====================================================================
+// SECTION 3: ANALYSIS WORKFLOW
+// ====================================================================
+
+// Set the map center to the region of interest
+Map.centerObject(region, 12);
+
+// --- Part A: Visualization and Console Output (using forEach) and SHP Export ---
+// This part adds layers to the map, prints results, and exports a SHP for each year.
+years.forEach(function(year) {
+ var start = ee.Date.fromYMD(year, startMonth, 1);
+ var end = ee.Date.fromYMD(year, endMonth, 30);
+
+ // Get the appropriate Landsat collection for the year
+ var collection = getLandsatCollection(year);
+ 
+ // Check if the collection is empty
+ var imageCount = collection.size();
+ imageCount.getInfo(function(count) {
+   print('-----------------------------------------');
+   print('Year:', year);
+   print('Number of images:', count);
+   if (count === 0) {
+     print('No images found for this year. Skipping visualization and export.');
+   }
+ });
+
+ var median = collection.median();
+ 
+ // Define band names based on the Landsat sensor
+ var bands;
+ if (year <= 2012) {
+   // Landsat 5: B2=Green, B4=NIR; B3=Red, B2=Green, B1=Blue
+   bands = {ndwi: ['B2', 'B4'], rgb: ['B3', 'B2', 'B1']};
+ } else {
+   // Landsat 8/9: B3=Green, B5=NIR; B4=Red, B3=Green, B2=Blue
+   bands = {ndwi: ['B3', 'B5'], rgb: ['B4', 'B3', 'B2']};
+ }
+
+ // Calculate NDWI and water mask
+ var ndwi = median.normalizedDifference(bands.ndwi).rename('NDWI');
+ // Use waterMask without selfMask() for vectorization
+ var waterMask = ndwi.gt(0.3);
+
+ // Convert the water mask raster to a vector feature collection
+ var waterVector = waterMask.reduceToVectors({
+   geometry: region,
+   scale: 30,
+   maxPixels: 1e13
+   // No reducer needed for a single-band boolean image
+ });
+ 
+ // Export the vector data to Google Drive as a Shapefile (.shp)
+ Export.table.toDrive({
+   collection: waterVector,
+   description: 'GlacialLake_' + year,
+   folder: 'GlacierLake_/SHP',
+   fileFormat: 'SHP'
+ });
+
+ // Visualization layers (use selfMask() here for display)
+ Map.addLayer(median.select(bands.rgb).clip(region), {min: 0, max: 0.3}, 'RGB ' + year);
+ Map.addLayer(ndwi.selfMask().clip(region), {min: -1, max: 1, palette: ['brown', 'white', 'blue']}, 'NDWI ' + year);
+ Map.addLayer(waterMask.selfMask().clip(region), {palette: ['cyan']}, 'Water Mask ' + year);
+
+ // Calculate and print area to the console
+ var pixelArea = waterMask.selfMask().multiply(ee.Image.pixelArea());
+ var lakeArea = pixelArea.reduceRegion({
+   reducer: ee.Reducer.sum(),
+   geometry: region,
+   scale: 30,
+   maxPixels: 1e13
+ });
+
+ var area_m2 = ee.Number(lakeArea.get('NDWI'));
+ 
+ area_m2.getInfo(function(area) {
+   print('Calculated Area: ', area.toFixed(2), 'Meters² (' + (area / 1e6).toFixed(2) + ' KM²)');
+ });
+});
+
+// --- Part B: Area Calculation and Export to CSV (using map) ---
+// This part calculates the area for each year and exports the results to a single CSV.
+var areaResults = ee.List(years).map(function(year) {
+ var start = ee.Date.fromYMD(year, startMonth, 1);
+ var end = ee.Date.fromYMD(year, endMonth, 30);
+
+ // Get the appropriate Landsat collection for the year
+ var image = getLandsatCollection(year).median();
+
+ // Define band names based on the Landsat sensor
+ var bands;
+ if (year <= 2012) {
+   bands = {ndwi: ['B2', 'B4']};
+ } else {
+   bands = {ndwi: ['B3', 'B5']};
+ }
+ 
+ var ndwi = image.normalizedDifference(bands.ndwi).rename('NDWI');
+ var waterMask = ndwi.gt(0.3);
+
+ var pixelArea = waterMask.multiply(ee.Image.pixelArea());
+ var lakeArea = pixelArea.reduceRegion({
+   reducer: ee.Reducer.sum(),
+   geometry: region,
+   scale: 30,
+   maxPixels: 1e13
+ });
+
+ var area_m2 = ee.Number(lakeArea.get('NDWI'));
+ var area_km2 = area_m2.divide(1e6);
+
+ return ee.Feature(null, {
+   'year': year,
+   'lake_area_m2': area_m2,
+   'lake_area_km2': area_km2
+ });
+});
+
+var areaCollection = ee.FeatureCollection(areaResults);
+
+// Export the feature collection to a CSV file in Google Drive
+Export.table.toDrive({
+ collection: areaCollection,
+ description: 'Glacial__GlacialLakeArea_CSV',
+ folder: 'GlacierLake_',
+ fileFormat: 'CSV'
+});
                 </code></pre>
             </div>
         </div>
@@ -172,13 +470,23 @@ print('Lake Area in 2024 (sq km):', ee.Number(area_sq_km).divide(1e6));
             try {
                 // Use document.execCommand('copy') which is widely supported in iframes
                 document.execCommand('copy');
-                alert('Code copied to clipboard!');
+                // Display a success message
+                const copyMessage = document.getElementById('copy-message');
+                copyMessage.style.opacity = '1';
+                setTimeout(() => {
+                    copyMessage.style.opacity = '0';
+                }, 2000);
             } catch (err) {
                 console.error('Failed to copy code: ', err);
-                alert('Failed to copy code. Please select and copy manually.');
             }
             window.getSelection().removeAllRanges();
         }
+        
+        // This makes sure the syntax highlighting runs after the page has loaded
+        // all its content, including the includes from the separate files.
+        window.addEventListener('load', () => {
+            hljs.highlightAll();
+        });
     </script>
 </body>
 </html>

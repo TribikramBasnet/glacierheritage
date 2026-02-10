@@ -64,7 +64,7 @@
     "coordinates": [ 87.091730788310286, 27.79860297306077, 0.0 ] 
     } },
 { "type": "Feature", "properties": { 
-    "id": null, "name": "Dona Glacial Lake", "description": null, 
+    "id": null, "name": "Dona (Thulagi) Glacial Lake", "description": null, 
     "timestamp": null, "begin": null, "end": null, "altitudeMode": null, 
     "tessellate": -1, "extrude": 0, "visibility": -1, "drawOrder": null, 
     "icon": null, "page":"dona" }, "geometry":
