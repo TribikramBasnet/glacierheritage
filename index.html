@@ -15,27 +15,36 @@
 
     <!-- This div will now load the main website header from header.html -->
     <div data-include-html="includes/header.html"></div>
-    
-    <!-- This is the home page's specific navigation, placed below the master header -->
-    <div class="container text-center mt-3">
-        <!-- Navigation Buttons for different monitoring pages -->
-        <nav id="lake-nav" class="my-4">
-            <a href="../glacierheritage/pages/imja.html" class="btn btn-outline-primary mx-1">Imja Glacial Lake</a>
-            <a href="../glacierheritage/pages/barun.html" class="btn btn-outline-primary mx-1">Barun Glacial Lake</a>
-            <a href="../glacierheritage/pages/thso_rolpa.html" class="btn btn-outline-primary mx-1">Tsho Rolpa Glacial Lake</a>
-            <a href="../glacierheritage/pages/dona.html" class="btn btn-outline-primary mx-1">Dona (Thulagi) Glacial Lake</a>
-            <a href="../glacierheritage/pages/lower_barun.html" class="btn btn-outline-primary mx-1">Lower Barun Glacial Lake</a>
-            <a href="../glacierheritage/pages/bajura_ytd.html" class="btn btn-outline-primary mx-1">Glacial Lake of Bajura</a>
-        </nav>
-    </div>
 
-    <!-- Body -->
-    <div id="map-container" style="position: relative; height: 450px; margin: 20px;">
-        <div id="map" style="height: 100%; width: 100%;"></div>
-        <!-- Recenter button added here -->
-        <button id="recenter-btn" class="btn btn-primary btn-sm recenter-btn">
-            <i class="fas fa-crosshairs"></i>
-        </button>
+    <!-- Body - Content Section -->
+    <div class="container mt-5 mb-5">
+        <div class="home-content-wrapper">
+            <!-- Text Content Placeholder -->
+            <div class="text-content-section">
+                <h2>Welcome to Glacier Monitoring Nepal</h2>
+                <p>
+                    This project monitors the changes in glacial lakes across Nepal's Himalayan region. 
+                    By tracking these critical water systems, we provide valuable insights into climate change 
+                    impacts and environmental trends. Explore our interactive maps and comparative imagery to see 
+                    how these glacial lakes have evolved over time.
+                </p>
+                <p>
+                    Click on the map markers to dive deeper into specific glacier lake data, or use the 
+                    "Explore Glacier Lakes" menu to view detailed analysis of each monitored location.
+                </p>
+            </div>
+
+            <!-- Map Section -->
+            <div class="map-section">
+                <div id="map-container" style="position: relative; height: 450px;">
+                    <div id="map" style="height: 100%; width: 100%;"></div>
+                    <!-- Recenter button added here -->
+                    <button id="recenter-btn" class="btn btn-primary btn-sm recenter-btn">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <!-- This div will contain the walkthrough modal -->
@@ -59,4 +68,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

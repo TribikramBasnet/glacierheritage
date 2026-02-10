@@ -1,7 +1,150 @@
+/* 1. Global Reset & Variables */
+:root {
+    --site-margin: 10%; /* Use a percentage for consistent side margins */
+}
+
+html, body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 2. Unified Width Strategy */
+/* Apply this class to Header and Container in your HTML */
+.page-header, 
+.container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: var(--site-margin) !important;
+    padding-right: var(--site-margin) !important;
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+}
+
+/* 3. Header Adjustment */
+.page-header {
+    background-color: #333;
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+/* 4. Main Body Adjustment */
+.container {
+    flex: 1;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    margin: 0 auto; /* Center it */
+}
+
+
+/* ========================================================== */
+
+
+/* 5. Footer Adjustment */
+.footer-master {
+    background-color: transparent;
+    color: #333;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: center;
+    border-top: 1px solid #222;
+    margin-top: auto;
+    width: 100%;
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    padding-left: var(--site-margin) !important;
+    padding-right: var(--site-margin) !important;
+}
+
+.footer-section {
+    flex-basis: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-section h5 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+    white-space: nowrap;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-container img {
+    height: 60px;
+    width: auto;
+}
+
+.dark-line {
+    border-top: 2px solid #fff;
+    width: 100%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.footer-credits {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #999;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+    padding-left: var(--site-margin) !important;
+    padding-right: var(--site-margin) !important;
+}
+
+
+/* ========================================================== */
+
+
+/* 6. Fix for your Slider (It was restricted to 800px) */
+.slider-container {
+    position: relative;
+    width: 100%; /* Stretch to container width */
+    max-width: 1000px; /* Increased from 800px */
+    height: auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+}
+
+
+/* Map stays full width within the container padding */
 #map {
     height: 600px;
     width: 100%;
 }
+
+/* Keep the rest of your original component styles below... */
+.content-section { margin-bottom: 40px; }
+
+
+/* -------------------------------------------- */
 
 /* Glacial Lake Page */
 body {
@@ -27,7 +170,8 @@ body {
 
 .container {
     flex: 1;
-    padding: 20px;
+    padding: 20px 10px;
+    width: 100%;
 }
 
 .content-section {
@@ -169,6 +313,19 @@ body {
     justify-content: center;
 }
 
+/* Menu Navigation Styling */
+.nav .nav-link {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0d6efd;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav .nav-link:hover {
+    color: #0a58ca;
+}
+
 /* Navigation Button */
 #lake-nav {
     display: flex;
@@ -181,63 +338,42 @@ body {
     margin: 0;
 }
 
-/* Styling for the master footer layout */
-.footer-master {
-    background-color: transparent;
+/* Home Page Layout */
+.home-content-wrapper {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.text-content-section {
+    flex: 0.6; /* reduce text 0column width */
+    min-width: 200px;
+}
+
+.text-content-section h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
     color: #333;
-    padding: 2rem 1rem;
-    text-align: center;
-    border-top: 1px solid #222;
 }
 
-.footer-grid {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding-bottom: 1rem;
-}
-
-.footer-section {
-    flex-basis: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.footer-section h5 {
+.text-content-section p {
     font-size: 1rem;
-    color: #333;
-    margin-bottom: 1rem;
-    white-space: nowrap;
-}
-
-.logo-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
-.logo-container img {
-    height: 60px;
-    width: auto;
-}
-
-.dark-line {
-    border-top: 2px solid #fff;
-    width: 100%;
-    margin-top: 1rem;
+    line-height: 1.6;
+    color: #555;
     margin-bottom: 1rem;
 }
 
-.footer-credits {
-    margin-top: 1rem;
-    font-size: 0.8rem;
-    color: #999;
-    border-top: 1px solid #ccc;
-    padding-top: 1rem;
+.map-section {
+    flex: 1.4; /* increase map column width */
+    min-width: 250px;
+}
+
+@media (max-width: 768px) {
+    .home-content-wrapper {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
 }
 
 /* New responsive styles for small screens */

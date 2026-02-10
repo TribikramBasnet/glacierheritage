@@ -47,7 +47,7 @@ fetch('data/glacier_points.geojson')
                     `;
                     layer.bindPopup(popupContent);
                     layer.on('click', function(e) {
-                        map.flyTo(e.latlng, 9);
+                        map.flyTo(e.latlng, 7);
                         setTimeout(() => { layer.openPopup(); }, 800);
                         layer.once('click', function() {
                             window.location.href = `pages/${feature.properties.page}.html`;
